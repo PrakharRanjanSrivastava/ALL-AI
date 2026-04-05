@@ -23,32 +23,34 @@ const WriteArticle = () => {
 
    const {getToken}= useAuth();
 
-   const onSubmitHandler = async (e)=>{
-
-    e.preventDefault()
+   const onSubmitHandler = async (e) => {
+    e.preventDefault();
     try {
-        setLoading(true)
-        const prompt=`write an article about ${input} in ${selectLength.text} `
+        setLoading(true);
+        const prompt = `write an article about ${input} in ${selectLength.text}`;
 
-        const {data} = await axios.post('/api/ai/generate-article',{prompt,length:selectLength,length},{
-            headers:{
-                Authorization: `Bearer ${await getToken()}`
+        const { data } = await axios.post('/api/ai/generate-article', 
+            { prompt, length: selectLength.length }, 
+            {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`
+                }
             }
-        })
+        );
 
-        if(data.success){
-          setContent(data.content)
-          setLoading(false)
-        }else{
-          setLoading(false)
-          toast.error(data.message)
+        if (data.success) {
+            setContent(data.content);
+            setLoading(false);
+        } else {
+            setLoading(false);
+            toast.error(data.message);
         }
     } catch (error) {
-      toast.error(error.message)
-      setLoading(false)
+        // Safely pull the error message even if the response fails completely
+        toast.error(error?.response?.data?.message || error.message);
+        setLoading(false);
     }
-      setLoading(false)
-   }
+}
 
 
   return (

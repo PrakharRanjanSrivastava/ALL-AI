@@ -1,3 +1,6 @@
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 import OpenAI from "openai";
 import sql from "../configs/db.js";
 import { clerkClient } from "@clerk/express";
@@ -5,7 +8,7 @@ import axios from "axios";
 import { response } from "express";
 import {v2 as cloudinary} from 'cloudinary'
 import fs from 'fs'
-import pdf from 'pdf-parse/lib/pdf-parse.js'
+const pdf = require('pdf-parse');
 
 const AI = new OpenAI({
     apiKey: process.env.GEMENI_API_KEY,

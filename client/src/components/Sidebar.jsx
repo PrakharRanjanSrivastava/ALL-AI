@@ -60,7 +60,9 @@ const Sidebar = ({sidebar, setSidebar}) => {
                     <h1 className='text-sm font-medium'>
                         {user.fullName}
                     </h1>
-                    <p className='text-xs text-gray-500'><Protect plan="premium" fallback="Free">Premium</Protect> Plan</p>
+                    <p className='text-xs text-gray-500'>
+                {user?.publicMetadata?.plan === 'premium' || user?.privateMetadata?.plan === 'premium' ? 'Premium' : 'Free'} Plan
+            </p>
                 </div>
 
             </div>

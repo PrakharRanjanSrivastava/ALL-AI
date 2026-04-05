@@ -19,54 +19,48 @@ const [loading , setLoading] = useState(false)
      
         const {getToken}= useAuth();
 
-const fetchCreations = async (e)=>{
-
-    
+const fetchCreations = async () => {
     try {
+        setLoading(true);
+        // Changed to .get() and fixed the URL to /api/user/
+        const { data } = await axios.get('/api/user/get-published-creations', {
+            headers: {
+                Authorization: `Bearer ${await getToken()}`
+            }
+        });
+
+        if (data.success) {
+            setCreations(data.creations); // Fixed setContent typo
+            setLoading(false);
+        } else {
+            setLoading(false);
+            toast.error(data.message);
+        }
+    } catch (error) {
+        toast.error(error?.response?.data?.message || error.message);
+        setLoading(false);
+    }
+}
+
+  const imageLikeToggle = async (id) => {
+    try {
+        // Fixed URL from /api/ai/ to /api/user/
+        const { data } = await axios.post('/api/user/toggle-like-creation', { id }, {
+            headers: {
+                Authorization: `Bearer ${await getToken()}`
+            }
+        });
         
-
-        const {data} = await axios.post('/api/ai/get-published-creations',{
-            headers:{
-                Authorization: `Bearer ${await getToken()}`
-            }
-        })
-
-        if(data.success){
-          setContent(data.content)
-          setLoading(false)
-        }else{
-          setLoading(false)
-          toast.error(data.message)
+        if (data.success) {
+            toast.success(data.message);
+            fetchCreations();
+        } else {
+            toast.error(data.message);
         }
     } catch (error) {
-      toast.error(error.message)
-      setLoading(false)
+        toast.error(error?.response?.data?.message || error.message);
     }
-   }
-
-   const imageLikeToggle = async (id)=>{
-    try {
-
-       const {data} = await axios.post('/api/ai/toggle-like-creation',{id},{
-            headers:{
-                Authorization: `Bearer ${await getToken()}`
-            }
-        })
-         if(data.success){
-          toast.success(data.message)
-          fetchCreations()
-        }else{
-          
-          toast.error(data.message)
-        }
-      
-    } catch (error) {
-      toast.error(error.message)
-    
-      
-    }
-  
-  }
+}
 
 
 
